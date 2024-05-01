@@ -8,9 +8,9 @@ MUTED=$(pactl get-sink-mute @DEFAULT_SINK@ | grep -oP '(?<=Mute: ).*')
 
 # Determine the icon and text to use based on mute state
 if [ "$MUTED" == "yes" ]; then
-	TEXT="    muted"
+	TEXT="Volume   muted"
 else
-	TEXT="    unmuted"
+	TEXT="Volume   unmuted"
 fi
 
 # Send a notification
