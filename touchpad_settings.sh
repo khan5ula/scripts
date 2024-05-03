@@ -12,7 +12,7 @@ fi
 # Get the property IDs
 tapping_enabled_id=$(xinput list-props $device_id | grep -m 1 'Tapping Enabled' | grep -o '[0-9]\+' | head -n 1)
 natural_scrolling_id=$(xinput list-props $device_id | grep -m 1 'Natural Scrolling Enabled' | grep -o '[0-9]\+' | head -n 1)
-tapping_drag_enabled_id=$(xinput list-props $device_id | grep -m 1 'Tapping Drag Enabled' | grep -o '[0-9]\+' | head -n 1)
+tapping_drag_enabled_id=$(xinput list-props $device_id | grep -m 1 'Tapping Drag Lock Enabled (' | grep -o '[0-9]\+' | head -n 1)
 
 # Set properties on the device
 if [[ -n $tapping_enabled_id && -n $natural_scrolling_id && -n $tapping_drag_enabled_id ]]; then
