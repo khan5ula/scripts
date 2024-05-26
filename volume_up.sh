@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Unmute
+pactl set-sink-mute @DEFAULT_SINK@ 0
+
 # Increase volume
 pactl set-sink-volume @DEFAULT_SINK@ +5%
 
@@ -7,4 +10,4 @@ pactl set-sink-volume @DEFAULT_SINK@ +5%
 VOLUME=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -o '[0-9]*%' | head -1)
 
 # Send a notification
-notify-send "Volume: 󰝝 $VOLUME" -h int:value:"$VOLUME" -h string:synchronous:volume
+notify-send "Volume: $VOLUME" -h int:value:"$VOLUME" -h string:synchronous:volume
