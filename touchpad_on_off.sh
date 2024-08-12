@@ -22,9 +22,9 @@ target_value=$((1 - current_value))
 if [[ -n $device_enabled_id ]]; then
 	xinput set-prop $device_id $device_enabled_id $target_value
 	if [[ $current_value == 1 ]]; then
-		notify-send "Touchpad OFF"
+		notify-send "Touchpad disabled"
 	else
-		notify-send "Touchpad ON"
+		notify-send "Touchpad enabled"
 	fi
 else
 	notify-send '  Could not set touchpad settings properly, please check xinput devices' -u critical
