@@ -6,7 +6,7 @@ if [ -n "$second_monitor" ]; then
   # Put the second monitor to the right and rotate vertically
   xrandr --output eDP --primary --mode 2560x1600 --rotate normal --output $second_monitor --mode 1920x1080 --rotate right --right-of eDP
   sleep 1
-  bspc monitor $second_monitor -d 󱡶
+  bspc monitor "$second_monitor" -d 󱡶
   polybar secondbar &
   notify-send '  Second monitor connected'
 else

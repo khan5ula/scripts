@@ -19,6 +19,9 @@ if [ -d "$srcPath" ] && [ -d "$destPath" ]; then
     # Copy the source directory to the newly created directory
     cp -r "$srcPath" "$backupDir"
 
+    # Change the read permissions of the directory
+    sudo chmod -R 644 "$destPath"/"${backupDir}"
+
     # Check if the copy was successful
     if [ $? -eq 0 ]; then
       echo "Backup completed successfully."
