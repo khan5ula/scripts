@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Scripts to accept github collaboration requests for tira courses
+# Script to accept github collaboration requests for tira courses
 
 # GitHub API token
-TOKEN=$(grep -Po "(?<=^github_api_token=).*" ./resources/.apikey)
+TOKEN=$(grep -Po "(?<=^github_api_token=).*" ~/scripts/resources/.apikey)
 
 # Get the list of collaboration invitations
 invitations=$(curl -s -L \
