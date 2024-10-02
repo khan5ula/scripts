@@ -1,8 +1,15 @@
 #!/bin/fish
 
 set vpn_connections (nmcli connection show | grep vpn | grep -v "ipv6leak")
-set nmcli_command "nmcli connection"
-set yad_command "yad --title='Toggle VPN' --checklist --undecorated --no-click --width=450 --height=300 --list --column="Status " --column='VPN' --close-on-unfocus"
+set yad_command "yad --title='Toggle VPN' \
+                --checklist \
+                --undecorated \
+                --no-click \
+                --width=450 \
+                --height=300 \
+                --list \
+                --column='Status ' \
+                --column='VPN'"
 set active_connections
 set inactive_connections
 
@@ -12,22 +19,25 @@ for connection in $vpn_connections
     set vpn_status (echo $connection | awk '{print $4}')
 
     if test "$vpn_status" = --
-        set vpn_action up
+        # This connection is not active
         set vpn_bool false
         set inactive_connections $inactive_connections $connection
     else
-        set vpn_action down
+        # This connection is active
         set vpn_bool true
         set active_connections $active_connections $connection
     end
 
-    set nmcli_command "nmcli connection $vpn_action $id)"
-    set yad_command "$yad_command $vpn_bool $name"
+    set yad_command $yad_command $vpn_bool $name
 end
 
-set yad_command "$yad_command --button='Cancel!gtk-cancel:1' --button='Configure!gtk-preferences:nm-connection-editor' --button='Confirm!gtk-ok:0'"
+set yad_command "$yad_command \
+                --button='Cancel!gtk-cancel:1' \
+                --button='Configure!gtk-preferences:nm-connection-editor' \
+                --button='Confirm!gtk-ok:0'"
 set results (eval $yad_command)
 
+# The value of $status is 0 or 1 depending on which button the user pressed
 if test $status -eq 0
     # Toggle connections on
     for result in $results
@@ -36,7 +46,7 @@ if test $status -eq 0
         set connection (echo $inactive_connections | grep "$result")
 
         if test -n "$connection"
-            nmcli connection up (echo $connection | awk '{print $2}')
+            nmcli connection up (echo $connection | awk '{print $1}')
         end
     end
 
@@ -46,14 +56,12 @@ if test $status -eq 0
         set name (echo $connection | awk '{print $1}')
         set match (echo $results | grep "$name")
 
-        if test -z "$match"
+        if not test -n "$match"
             set to_be_toggled_off $to_be_toggled_off $name
         end
     end
 
     for connection in $to_be_toggled_off
-        if test (string length "$connection") -gt 2
-            nmcli connection down $connection
-        end
+        nmcli connection down $connection
     end
 end
