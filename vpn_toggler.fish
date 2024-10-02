@@ -25,6 +25,7 @@ for connection in $vpn_connections
     set yad_command "$yad_command $vpn_bool $name"
 end
 
+set yad_command "$yad_command --button='Cancel!gtk-cancel:1' --button='Configure!gtk-preferences:nm-connection-editor' --button='Confirm!gtk-ok:0'"
 set results (eval $yad_command)
 
 if test $status -eq 0
@@ -42,11 +43,11 @@ if test $status -eq 0
     # Toggle connections off
     set to_be_toggled_off ""
     for connection in $active_connections
-        set id (echo $connection | awk '{print $2}')
+        set name (echo $connection | awk '{print $1}')
         set match (echo $results | grep "$name")
 
         if test -z "$match"
-            set to_be_toggled_off $to_be_toggled_off $id
+            set to_be_toggled_off $to_be_toggled_off $name
         end
     end
 
