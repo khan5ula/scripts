@@ -1,9 +1,13 @@
 #!/bin/bash
 
-megasync &
+existing_process=$(xdotool search --name "megasync")
 
-until xdotool search --onlyvisible --class '^megasync$'; do
-	sleep .2
-done
+if [ ! -n "$existing_process" ]; then
+  megasync &
 
-xdotool key Escape
+  until xdotool search --onlyvisible --class '^megasync$'; do
+    sleep .2
+  done
+
+  xdotool key Escape
+fi

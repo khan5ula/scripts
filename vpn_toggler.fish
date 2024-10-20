@@ -1,7 +1,15 @@
 #!/bin/fish
 
+set window_title "Toggle VPN"
+
+# If there are existing processes with same title, do nothing
+set existing_processes (xdotool search --name "$window_title")
+if test -n "$existing_processes"
+    exit
+end
+
 set vpn_connections (nmcli connection show | grep vpn | grep -v "ipv6leak")
-set yad_command "yad --title='Toggle VPN' \
+set yad_command "yad --title='$window_title' \
                 --checklist \
                 --undecorated \
                 --no-click \
@@ -35,12 +43,13 @@ set yad_command "$yad_command \
                 --button='Cancel!gtk-cancel:1' \
                 --button='Configure!gtk-preferences:nm-connection-editor' \
                 --button='Confirm!gtk-ok:0'"
-set results (eval $yad_command)
+
+set toggled_active (eval $yad_command)
 
 # The value of $status is 0 or 1 depending on which button the user pressed
 if test $status -eq 0
     # Toggle connections on
-    for result in $results
+    for result in $toggled_active
         set result (string replace "TRUE|" "" $result)
         set result (string replace "|" "" $result)
         set connection (echo $inactive_connections | grep "$result")
@@ -54,7 +63,7 @@ if test $status -eq 0
     set to_be_toggled_off ""
     for connection in $active_connections
         set name (echo $connection | awk '{print $1}')
-        set match (echo $results | grep "$name")
+        set match (echo $toggled_active | grep "$name")
 
         if not test -n "$match"
             set to_be_toggled_off $to_be_toggled_off $name
